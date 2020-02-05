@@ -5,21 +5,36 @@
  */
 package appalquilerveh.logica;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  *
  * @author jbermudezb
  */
 public class Vehiculo {
 
+    private int idvehiculo;
     private String matricula;
     private String tipo;
+    private String descripcion;
 
     public Vehiculo() {
     }
 
-    public Vehiculo(String matricula, String tipo) {
+    public Vehiculo(int idvehiculo, String matricula, String tipo, String descripcion) {
+        this.idvehiculo = idvehiculo;
         this.matricula = matricula;
         this.tipo = tipo;
+        this.descripcion = descripcion;
+    }
+
+    public int getIdvehiculo() {
+        return idvehiculo;
+    }
+
+    public void setIdvehiculo(int idvehiculo) {
+        this.idvehiculo = idvehiculo;
     }
 
     public String getMatricula() {
@@ -38,9 +53,28 @@ public class Vehiculo {
         this.tipo = tipo;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
     @Override
     public String toString() {
-        return "Vehiculo{" + "matricula=" + matricula + ", tipo=" + tipo + '}';
+        return "Vehiculo{" + "idvehiculo=" + idvehiculo + ", matricula=" + matricula + ", tipo=" + tipo + ", descripcion=" + descripcion + '}';
+    }
+    
+    public static Vehiculo load(ResultSet rs) throws SQLException {
+        Vehiculo v = new Vehiculo();
+        
+        v.setIdvehiculo(rs.getInt(1));
+        v.setMatricula(rs.getString(2));
+        v.setTipo(rs.getString(3));
+        v.setDescripcion(rs.getString(4));
+        
+        return v;
     }
     
 }
