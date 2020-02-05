@@ -25,18 +25,16 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="136" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="btnenviar" pref="143" max="32767" attributes="0"/>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="txtpass" alignment="0" pref="103" max="32767" attributes="0"/>
-                          <Component id="txtuser" alignment="0" max="32767" attributes="0"/>
-                      </Group>
+                  <Component id="btnenviar" pref="103" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="txtuser" pref="103" max="32767" attributes="0"/>
+                      <Component id="txtpass" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace pref="121" max="32767" attributes="0"/>
@@ -76,8 +74,6 @@
         <Property name="text" type="java.lang.String" value="Pass"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtpass">
-    </Component>
     <Component class="javax.swing.JButton" name="btnenviar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Enviar"/>
@@ -85,6 +81,8 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnenviarActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JPasswordField" name="txtpass">
     </Component>
   </SubComponents>
 </Form>

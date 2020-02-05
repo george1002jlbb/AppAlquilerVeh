@@ -5,7 +5,6 @@
  */
 package appalquilerveh.dao;
 
-
 import appalquilerveh.logica.Alquiler;
 import appalquilerveh.logica.Vehiculo;
 import java.io.IOException;
@@ -31,10 +30,11 @@ public class Metodos {
         Connection conexion = conn.Conectar(); // cargamos la conexion
         PreparedStatement pst = null;
         try {
-            pst = conexion.prepareStatement("INSERT INTO vehiculo VALUES (?,?,?)");
-            pst.setString(1, v.getMatricula());
-            pst.setString(2, v.getTipo());
-            pst.setString(3, v.getDescripcion());
+            pst = conexion.prepareStatement("INSERT INTO vehiculo VALUES (?,?,?,?)");
+            pst.setInt(1, v.getIdvehiculo());
+            pst.setString(2, v.getMatricula());
+            pst.setString(3, v.getTipo());
+            pst.setString(4, v.getDescripcion());
             pst.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Error Method - guardarVehiculo -- " + e.getMessage());
@@ -42,8 +42,8 @@ public class Metodos {
             conn.close(conexion, pst, null);
         }
     }
-    
-     public Vehiculo consultarVehiculoMatricula(String matricula) throws SQLException, IOException, IllegalStateException, NoSuchAlgorithmException, Exception {
+
+    public Vehiculo consultarVehiculoMatricula(String matricula) throws SQLException, IOException, IllegalStateException, NoSuchAlgorithmException, Exception {
         Connection conexion = conn.Conectar(); // cargamos la conexion
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -51,6 +51,26 @@ public class Metodos {
         try {
             pst = conexion.prepareStatement("SELECT * FROM vehiculo WHERE matricula = ?");
             pst.setString(1, matricula);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                v = Vehiculo.load(rs);
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error Method - consultarVehiculoMatricula -- " + e.getMessage());
+        } finally {
+            conn.close(conexion, pst, rs);
+        }
+        return v;
+    }
+    
+    public Vehiculo consultarVehiculo(int idvehiculo) throws SQLException, IOException, IllegalStateException, NoSuchAlgorithmException, Exception {
+        Connection conexion = conn.Conectar(); // cargamos la conexion
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        Vehiculo v = new Vehiculo();
+        try {
+            pst = conexion.prepareStatement("SELECT * FROM vehiculo WHERE idvehiculo = ?");
+            pst.setInt(1, idvehiculo);
             rs = pst.executeQuery();
             while (rs.next()) {
                 v = Vehiculo.load(rs);
@@ -100,7 +120,7 @@ public class Metodos {
             conn.close(conexion, pst, null);
         }
     }
-    
+
     public List listarTodosVehiculos() throws SQLException, IOException, IllegalStateException, NoSuchAlgorithmException, Exception {
         Connection conexion = conn.Conectar(); // cargamos la conexion
         PreparedStatement pst = null;
@@ -236,5 +256,4 @@ public class Metodos {
         }
     }
 
-    
 }

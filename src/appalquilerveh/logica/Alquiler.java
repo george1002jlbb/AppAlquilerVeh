@@ -18,15 +18,23 @@ public class Alquiler {
     private int nroorden;
     private int vehiculo;
     private double precioAlquiler;
+    private int dia;
+    private final int base =50;
+    private int pma;
     private String nombrePersona;
     private String contactoPersona;
 
     public Alquiler() {
     }
 
-    public Alquiler(int vehiculo, double precioAlquiler) {
+    public Alquiler(int idAlquiler, int nroorden, int vehiculo, double precioAlquiler, int dia, String nombrePersona, String contactoPersona) {
+        this.idAlquiler = idAlquiler;
+        this.nroorden = nroorden;
         this.vehiculo = vehiculo;
         this.precioAlquiler = precioAlquiler;
+        this.dia = dia;
+        this.nombrePersona = nombrePersona;
+        this.contactoPersona = contactoPersona;
     }
 
     public int getIdAlquiler() {
@@ -61,6 +69,26 @@ public class Alquiler {
         this.precioAlquiler = precioAlquiler;
     }
 
+    public int getDia() {
+        return dia;
+    }
+
+    public void setDia(int dia) {
+        this.dia = dia;
+    }
+
+    public int getBase() {
+        return base;
+    }
+
+    public int getPma() {
+        return pma;
+    }
+
+    public void setPma(int pma) {
+        this.pma = pma;
+    }
+
     public String getNombrePersona() {
         return nombrePersona;
     }
@@ -85,10 +113,13 @@ public class Alquiler {
     public static Alquiler load(ResultSet rs) throws SQLException {
         Alquiler a = new Alquiler();
         
-        a.setVehiculo(rs.getInt(1));
-        a.setPrecioAlquiler(rs.getDouble(2));
-        a.setNombrePersona(rs.getString(3));
-        a.setContactoPersona(rs.getString(4));
+        a.setIdAlquiler(rs.getInt(1));
+        a.setNroorden(rs.getInt(2));
+        a.setVehiculo(rs.getInt(3));
+        a.setPrecioAlquiler(rs.getDouble(4));
+        a.setDia(rs.getInt(5));
+        a.setNombrePersona(rs.getString(6));
+        a.setContactoPersona(rs.getString(7));
         
         return a;
     }
