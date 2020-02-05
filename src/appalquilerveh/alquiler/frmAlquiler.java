@@ -168,6 +168,7 @@ public class frmAlquiler extends javax.swing.JInternalFrame {
 
         try {
             Vehiculo v = logica.consultarVehiculo(cbove.getItemAt(cbove.getSelectedIndex()).getIdCombo());
+            a.setVehiculo(v.getIdvehiculo());
             switch (v.getTipo()) {
                 case "Coche":
                     double precio_coche = 1.5;
@@ -188,7 +189,15 @@ public class frmAlquiler extends javax.swing.JInternalFrame {
                     break;
 
             }
-            logica.guardarAlquiler(a);
+            
+            if (!logica.existeAlquiler( a.getNroorden() ) ) {
+                logica.guardarAlquiler(a);
+                JOptionPane.showMessageDialog(this, "Alquiler agregado correctamente", "Crear", JOptionPane.INFORMATION_MESSAGE);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Alquiler existe", "Crear", JOptionPane.ERROR_MESSAGE);
+            }
+            
         } catch (IOException ex) {
             Logger.getLogger(frmAlquiler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalStateException ex) {
