@@ -69,8 +69,9 @@ public class frmAlquiler extends javax.swing.JInternalFrame {
         txtnom = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         txttel = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnen = new javax.swing.JButton();
         btnCan = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
 
         setTitle("Crear Alquiler");
 
@@ -84,10 +85,10 @@ public class frmAlquiler extends javax.swing.JInternalFrame {
 
         jLabel5.setText("Telefono Contacto");
 
-        jButton1.setText("Enviar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnen.setText("Enviar");
+        btnen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnenActionPerformed(evt);
             }
         });
 
@@ -95,6 +96,14 @@ public class frmAlquiler extends javax.swing.JInternalFrame {
         btnCan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCanActionPerformed(evt);
+            }
+        });
+
+        btnModificar.setText("Modificar");
+        btnModificar.setEnabled(false);
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
             }
         });
 
@@ -113,10 +122,12 @@ public class frmAlquiler extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(btnen)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnModificar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCan)
-                        .addGap(0, 121, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE))
                     .addComponent(txtnro)
                     .addComponent(cbove, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtdi)
@@ -149,15 +160,16 @@ public class frmAlquiler extends javax.swing.JInternalFrame {
                     .addComponent(txttel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(btnCan))
-                .addContainerGap(54, Short.MAX_VALUE))
+                    .addComponent(btnen)
+                    .addComponent(btnCan)
+                    .addComponent(btnModificar))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnenActionPerformed
         // TODO add your handling code here:
 
         Alquiler a = new Alquiler();
@@ -184,20 +196,21 @@ public class frmAlquiler extends javax.swing.JInternalFrame {
                     a.setPrecioAlquiler(precio_cargaMin * a.getPma() * a.getDia());
                     break;
                 case "Camion de Carga":
-                    double precio_cargaMax = 40;
-                    a.setPrecioAlquiler(precio_cargaMax * a.getDia());
+                    a.setPma(Integer.parseInt(JOptionPane.showInputDialog("Introduzca un PMA (Peso Maximo Autorizado en Toneladas)")));
+                    double precio_cargaMax = a.getBase() + 40;
+                    a.setPrecioAlquiler(precio_cargaMax * a.getPma() * a.getDia());
                     break;
 
             }
-            
-            if (!logica.existeAlquiler( a.getNroorden() ) ) {
+
+            if (!logica.existeAlquiler(a.getNroorden())) {
                 logica.guardarAlquiler(a);
                 JOptionPane.showMessageDialog(this, "Alquiler agregado correctamente", "Crear", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Alquiler existe", "Crear", JOptionPane.ERROR_MESSAGE);
             }
-            
+
         } catch (IOException ex) {
             Logger.getLogger(frmAlquiler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalStateException ex) {
@@ -208,26 +221,90 @@ public class frmAlquiler extends javax.swing.JInternalFrame {
             Logger.getLogger(frmAlquiler.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnenActionPerformed
 
     private void btnCanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCanActionPerformed
         // TODO add your handling code here:
         this.dispose(); // cerrar ventana
     }//GEN-LAST:event_btnCanActionPerformed
 
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        // TODO add your handling code here:
+        try {
+            Alquiler a = new Alquiler();
+
+            a.setNroorden(Integer.parseInt(txtnro.getText()));
+            a.setNombrePersona(txtnom.getText().toUpperCase());
+            a.setContactoPersona(txttel.getText());
+
+            if (a.getDia() != Integer.parseInt(txtdi.getText())) {
+                a.setDia(Integer.parseInt(txtdi.getText()));
+                // proceso de recalculo de precio si el dia cambia
+                try {
+                    Vehiculo v = logica.consultarVehiculo(cbove.getItemAt(cbove.getSelectedIndex()).getIdCombo());
+                    a.setVehiculo(v.getIdvehiculo());
+                    switch (v.getTipo()) {
+                        case "Coche":
+                            double precio_coche = 1.5;
+                            a.setPrecioAlquiler(a.getBase() + (precio_coche * a.getDia()));
+                            break;
+                        case "MicroBuses":
+                            double precio_MicroBuses = 2;
+                            a.setPrecioAlquiler(a.getBase() + (precio_MicroBuses * a.getDia()));
+                            break;
+                        case "Furgoneta de Carga":
+                            a.setPma(Integer.parseInt(JOptionPane.showInputDialog("Introduzca un PMA (Peso Maximo Autorizado en Toneladas)")));
+                            double precio_cargaMin = a.getBase() + 20;
+                            a.setPrecioAlquiler(precio_cargaMin * a.getPma() * a.getDia());
+                            break;
+                        case "Camion de Carga":
+                            a.setPma(Integer.parseInt(JOptionPane.showInputDialog("Introduzca un PMA (Peso Maximo Autorizado en Toneladas)")));
+                            double precio_cargaMax = a.getBase() + 40;
+                            a.setPrecioAlquiler(precio_cargaMax * a.getPma() * a.getDia());
+                            break;
+
+                    }
+
+                    logica.modificarAlquiler(a);
+                    JOptionPane.showMessageDialog(this, "Alquier modificado correctamente", "Modificar", JOptionPane.INFORMATION_MESSAGE);
+
+                } catch (IOException ex) {
+                    Logger.getLogger(frmAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalStateException ex) {
+                    Logger.getLogger(frmAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NoSuchAlgorithmException ex) {
+                    Logger.getLogger(frmAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(frmAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                a.setDia(Integer.parseInt(txtdi.getText()));
+                logica.modificarAlquiler(a);
+                JOptionPane.showMessageDialog(this, "Alquier modificado correctamente", "Modificar", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (IllegalStateException ex) {
+            Logger.getLogger(frmAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(frmAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_btnModificarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCan;
-    private javax.swing.JComboBox<Combo> cbove;
-    private javax.swing.JButton jButton1;
+    public static javax.swing.JButton btnModificar;
+    public static javax.swing.JButton btnen;
+    public javax.swing.JComboBox<Combo> cbove;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JTextField txtdi;
-    private javax.swing.JTextField txtnom;
-    private javax.swing.JTextField txtnro;
-    private javax.swing.JTextField txttel;
+    public javax.swing.JTextField txtdi;
+    public javax.swing.JTextField txtnom;
+    public javax.swing.JTextField txtnro;
+    public javax.swing.JTextField txttel;
     // End of variables declaration//GEN-END:variables
 }

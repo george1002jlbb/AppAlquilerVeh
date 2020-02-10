@@ -5,17 +5,47 @@
  */
 package appalquilerveh.alquiler;
 
+import appalquilerveh.dao.Metodos;
+import appalquilerveh.logica.Alquiler;
+import java.io.IOException;
+import static appalquilerveh.principal.jDesktopPane;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+
 /**
  *
  * @author jbermudezb
  */
 public class frmConsultarAl extends javax.swing.JInternalFrame {
 
+    // variables para gestionar los metodos a la base de datos HUELLAS
+    static Metodos logica = new Metodos();
+    
     /**
      * Creates new form Consultar
      */
     public frmConsultarAl() {
         initComponents();
+    }
+    
+    // metodo para reiniciar tabla
+    public void reiniciarJTable(javax.swing.JTable Tabla) {
+        DefaultTableModel modelo = (DefaultTableModel) Tabla.getModel();
+        while (modelo.getRowCount() > 0) {
+            modelo.removeRow(0);
+        }
+
+        TableColumnModel modCol = Tabla.getColumnModel();
+        while (modCol.getColumnCount() > 0) {
+            modCol.removeColumn(modCol.getColumn(0));
+        }
+        txtBusqueda.setText(""); // limpar caja de texto
     }
 
     /**
@@ -27,23 +57,339 @@ public class frmConsultarAl extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        txtBusqueda = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        cboBuscar = new javax.swing.JComboBox<>();
+        btnEnviar = new javax.swing.JButton();
+        btnLim = new javax.swing.JButton();
+        btnCer = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jtblBusqVeh = new javax.swing.JTable();
+
         setTitle("Consultar Aqluiler");
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setText("Escriba su busqueda");
+
+        txtBusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBusquedaKeyPressed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel2.setText("Buscar por");
+
+        cboBuscar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Orden", "Matricula", "Contacto", "Todos" }));
+
+        btnEnviar.setText("Enviar");
+        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarActionPerformed(evt);
+            }
+        });
+
+        btnLim.setText("Limpiar");
+        btnLim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimActionPerformed(evt);
+            }
+        });
+
+        btnCer.setText("Cerrar");
+        btnCer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel3.setText("Resultado");
+
+        jtblBusqVeh = new javax.swing.JTable(){
+            public boolean isCellEditable(int rowIndex, int colIndex){
+                return false;
+            }
+        };
+        jtblBusqVeh.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jtblBusqVeh.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtblBusqVehMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jtblBusqVeh);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 394, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cboBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(193, 193, 193)
+                                .addComponent(jLabel3))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnEnviar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnLim)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCer)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 274, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(cboBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEnviar)
+                    .addComponent(btnLim)
+                    .addComponent(btnCer))
+                .addGap(25, 25, 25)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtBusquedaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBusquedaKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBusquedaKeyPressed
+
+    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
+        // TODO add your handling code here:
+        List l = new LinkedList();
+
+        String busqueda = (String) cboBuscar.getSelectedItem();
+        //System.out.println("busqueda "+busqueda);
+        switch (busqueda) {
+            case "Orden":
+            try {
+                l.clear(); // limpiamos el listado
+                l = logica.listarTodosAlquilerOrden( Integer.parseInt(txtBusqueda.getText()) );
+                //System.out.println("lista " + l.size());
+                DefaultTableModel modelo = new DefaultTableModel();
+                jtblBusqVeh.setModel(modelo);
+                modelo.addColumn("Nro Orden");
+                modelo.addColumn("Matricula");
+                modelo.addColumn("Precio");
+                modelo.addColumn("Contacto");
+                jLabel3.setText("Resultado (" + l.size() + ")");
+                Object[] fila = null;
+                for (int i = 0; i < l.size(); i++) {
+                    modelo.addRow(fila);
+                    // Se crea un array que será una de las filas de la tabla.
+                    Alquiler a = (Alquiler) l.get(i);
+                    //fila[i] = l.get(i);
+                    modelo.setValueAt(a.getNroorden(), i, 0);
+                    modelo.setValueAt( logica.consultarVehiculo(a.getVehiculo()).getMatricula(), i, 1);
+                    modelo.setValueAt(a.getPrecioAlquiler(), i, 2);
+                   modelo.setValueAt(a.getNombrePersona().toUpperCase(), i, 3);
+
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(frmConsultarAl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            break;
+            case "Matricula":
+            try {
+                l.clear(); // limpiamos el listado
+                l = logica.listarTodosAlquilerMatricula(txtBusqueda.getText().toUpperCase() );
+                //System.out.println("lista " + l.size());
+                DefaultTableModel modelo = new DefaultTableModel();
+                jtblBusqVeh.setModel(modelo);
+                modelo.addColumn("Nro Orden");
+                modelo.addColumn("Matricula");
+                modelo.addColumn("Precio");
+                modelo.addColumn("Contacto");
+                jLabel3.setText("Resultado (" + l.size() + ")");
+                Object[] fila = null;
+                for (int i = 0; i < l.size(); i++) {
+                    modelo.addRow(fila);
+                    // Se crea un array que será una de las filas de la tabla.
+                    Alquiler a = (Alquiler) l.get(i);
+                    //fila[i] = l.get(i);
+                    modelo.setValueAt(a.getNroorden(), i, 0);
+                    modelo.setValueAt( logica.consultarVehiculo(a.getVehiculo()).getMatricula(), i, 1);
+                    modelo.setValueAt(a.getPrecioAlquiler(), i, 2);
+                    modelo.setValueAt(a.getNombrePersona().toUpperCase(), i, 3);
+
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(frmConsultarAl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(frmConsultarAl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(frmConsultarAl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(frmConsultarAl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            break;
+            case "Contacto":
+            try {
+                l.clear(); // limpiamos el listado
+                l = logica.listarTodosAlquilerContacto(txtBusqueda.getText().toUpperCase() );
+                //System.out.println("lista " + l.size());
+                DefaultTableModel modelo = new DefaultTableModel();
+                jtblBusqVeh.setModel(modelo);
+                modelo.addColumn("Nro Orden");
+                modelo.addColumn("Matricula");
+                modelo.addColumn("Precio");
+                modelo.addColumn("Contacto");
+                jLabel3.setText("Resultado (" + l.size() + ")");
+                Object[] fila = null;
+                for (int i = 0; i < l.size(); i++) {
+                    modelo.addRow(fila);
+                    // Se crea un array que será una de las filas de la tabla.
+                    Alquiler a = (Alquiler) l.get(i);
+                    //fila[i] = l.get(i);
+                    modelo.setValueAt(a.getNroorden(), i, 0);
+                    modelo.setValueAt( logica.consultarVehiculo(a.getVehiculo()).getMatricula(), i, 1);
+                    modelo.setValueAt(a.getPrecioAlquiler(), i, 2);
+                    modelo.setValueAt(a.getNombrePersona().toUpperCase(), i, 3);
+
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(frmConsultarAl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(frmConsultarAl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(frmConsultarAl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(frmConsultarAl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            break;
+            case "Todos":
+            try {
+                l.clear(); // limpiamos el listado
+                l = logica.listarTodosAlquiler();
+               //System.out.println("lista " + l.size());
+                DefaultTableModel modelo = new DefaultTableModel();
+                jtblBusqVeh.setModel(modelo);
+                modelo.addColumn("Nro Orden");
+                modelo.addColumn("Matricula");
+                modelo.addColumn("Precio");
+                modelo.addColumn("Contacto");
+                jLabel3.setText("Resultado (" + l.size() + ")");
+                Object[] fila = null;
+                for (int i = 0; i < l.size(); i++) {
+                    modelo.addRow(fila);
+                    // Se crea un array que será una de las filas de la tabla.
+                    Alquiler a = (Alquiler) l.get(i);
+                    //fila[i] = l.get(i);
+                    modelo.setValueAt(a.getNroorden(), i, 0);
+                    modelo.setValueAt( logica.consultarVehiculo(a.getVehiculo()).getMatricula(), i, 1);
+                    modelo.setValueAt(a.getPrecioAlquiler(), i, 2);
+                    modelo.setValueAt(a.getNombrePersona().toUpperCase(), i, 3);
+
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(frmConsultarAl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(frmConsultarAl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(frmConsultarAl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(frmConsultarAl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            break;
+            default:
+            jLabel3.setText("Resultado");
+            throw new IllegalArgumentException(":: Error de aplicacion ::" + busqueda);
+        }
+    }//GEN-LAST:event_btnEnviarActionPerformed
+
+    private void btnLimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimActionPerformed
+        // TODO add your handling code here:
+        this.reiniciarJTable(jtblBusqVeh); // Limpiar tabla
+        jLabel3.setText("Resultado");
+    }//GEN-LAST:event_btnLimActionPerformed
+
+    private void btnCerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerActionPerformed
+        // TODO add your handling code here:
+        this.dispose(); // cerrar ventana
+    }//GEN-LAST:event_btnCerActionPerformed
+
+    private void jtblBusqVehMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblBusqVehMouseClicked
+        // TODO add your handling code here:
+        try {
+            int seleccionfila = jtblBusqVeh.rowAtPoint(evt.getPoint()); // obtenemos la posicion
+            String identificacion = String.valueOf(jtblBusqVeh.getValueAt(seleccionfila, 0));
+            Alquiler a = logica.consultarAlquilerOrden( Integer.parseInt(identificacion) );
+
+            frmAlquiler frmAlquiler = new frmAlquiler();
+            frmAlquiler.txtnro.setText(String.valueOf(a.getNroorden()) );
+            frmAlquiler.cbove.setSelectedItem(a.getVehiculo());
+            frmAlquiler.txtdi.setText(String.valueOf(a.getDia()) );
+            frmAlquiler.txtnom.setText(a.getNombrePersona());
+            frmAlquiler.txttel.setText(a.getContactoPersona());
+
+            frmAlquiler.txtnro.setEnabled(false);
+            frmAlquiler.cbove.setEnabled(false);
+            frmAlquiler.btnen.setEnabled(false);
+            frmAlquiler.btnModificar.setEnabled(true);
+
+            int x = (jDesktopPane.getWidth() / 2) - frmAlquiler.getWidth() / 2;
+            int y = (jDesktopPane.getHeight() / 2) - frmAlquiler.getHeight() / 2;
+            frmAlquiler.setLocation(x, y);
+            jDesktopPane.add(frmAlquiler);
+            frmAlquiler.show();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(frmAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(frmAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(frmAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(frmAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jtblBusqVehMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCer;
+    private javax.swing.JButton btnEnviar;
+    private javax.swing.JButton btnLim;
+    private javax.swing.JComboBox<String> cboBuscar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jtblBusqVeh;
+    private javax.swing.JTextField txtBusqueda;
     // End of variables declaration//GEN-END:variables
 }

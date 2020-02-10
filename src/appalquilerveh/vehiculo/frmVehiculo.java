@@ -46,6 +46,7 @@ public class frmVehiculo extends javax.swing.JInternalFrame {
         btnen = new javax.swing.JButton();
         txtdesc = new javax.swing.JTextField();
         btnCan = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
 
         setTitle("Crear Vehiculo");
 
@@ -71,6 +72,14 @@ public class frmVehiculo extends javax.swing.JInternalFrame {
             }
         });
 
+        btnModificar.setText("Modificar");
+        btnModificar.setEnabled(false);
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -92,6 +101,8 @@ public class frmVehiculo extends javax.swing.JInternalFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnen)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnModificar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnCan)
                                 .addGap(0, 0, Short.MAX_VALUE))
@@ -116,8 +127,9 @@ public class frmVehiculo extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnen)
-                    .addComponent(btnCan))
-                .addContainerGap(40, Short.MAX_VALUE))
+                    .addComponent(btnCan)
+                    .addComponent(btnModificar))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
 
         pack();
@@ -156,15 +168,39 @@ public class frmVehiculo extends javax.swing.JInternalFrame {
         this.dispose(); // cerrar ventana
     }//GEN-LAST:event_btnCanActionPerformed
 
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        // TODO add your handling code here:
+        try {
+            Vehiculo v = new Vehiculo();
+
+            v.setMatricula(txtmat.getText().toUpperCase() );
+            v.setTipo(cboti.getSelectedItem().toString() );
+            v.setDescripcion(txtdesc.getText().toUpperCase() );
+            
+            logica.modificarVehiculo(v);
+            JOptionPane.showMessageDialog(this, "Vehiculo modificado correctamente", "Modificar", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (IOException ex) {
+            Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalStateException ex) {
+            Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnModificarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCan;
-    private javax.swing.JButton btnen;
-    private javax.swing.JComboBox<String> cboti;
+    public static javax.swing.JButton btnModificar;
+    public static javax.swing.JButton btnen;
+    public javax.swing.JComboBox<String> cboti;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JTextField txtdesc;
-    private javax.swing.JTextField txtmat;
+    public javax.swing.JTextField txtdesc;
+    public javax.swing.JTextField txtmat;
     // End of variables declaration//GEN-END:variables
 }

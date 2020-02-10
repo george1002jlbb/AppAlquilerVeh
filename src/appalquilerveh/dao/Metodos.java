@@ -125,19 +125,60 @@ public class Metodos {
         Connection conexion = conn.Conectar(); // cargamos la conexion
         PreparedStatement pst = null;
         ResultSet rs = null;
-        List lusuario = new LinkedList();
+        List lveh = new LinkedList();
         try {
             pst = conexion.prepareStatement("SELECT * FROM vehiculo");
             rs = pst.executeQuery();
             while (rs.next()) {
-                lusuario.add(Vehiculo.load(rs));
+                lveh.add(Vehiculo.load(rs));
             }
         } catch (SQLException e) {
             throw new SQLException("Error Method - listarTodosVehiculos -- " + e.getMessage());
         } finally {
             conn.close(conexion, pst, rs);
         }
-        return lusuario;
+        return lveh;
+    }
+    
+    public List listarTodosVehiculosMatricula(String MATRICULA) throws SQLException, IOException, IllegalStateException, NoSuchAlgorithmException, Exception {
+        Connection conexion = conn.Conectar(); // cargamos la conexion
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        List lveh = new LinkedList();
+        try {
+            pst = conexion.prepareStatement("SELECT * FROM vehiculo WHERE matricula LIKE ?");
+            MATRICULA = MATRICULA + "%";
+            pst.setString(1, MATRICULA);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                lveh.add(Vehiculo.load(rs));
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error Method - listarTodosVehiculosMatricula -- " + e.getMessage());
+        } finally {
+            conn.close(conexion, pst, rs);
+        }
+        return lveh;
+    }
+    
+    public List listarTodosVehiculosTipo(String TIPO) throws SQLException, IOException, IllegalStateException, NoSuchAlgorithmException, Exception {
+        Connection conexion = conn.Conectar(); // cargamos la conexion
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        List lveh = new LinkedList();
+        try {
+            pst = conexion.prepareStatement("SELECT * FROM vehiculo WHERE tipo=?");
+            pst.setString(1, TIPO);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                lveh.add(Vehiculo.load(rs));
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error Method - listarTodosVehiculosTipo -- " + e.getMessage());
+        } finally {
+            conn.close(conexion, pst, rs);
+        }
+        return lveh;
     }
 
     // MODULO ALQUILER
@@ -145,11 +186,14 @@ public class Metodos {
         Connection conexion = conn.Conectar(); // cargamos la conexion
         PreparedStatement pst = null;
         try {
-            pst = conexion.prepareStatement("INSERT INTO alquiler VALUES (?,?,?,?)");
-            pst.setInt(1, a.getVehiculo());
-            pst.setDouble(2, a.getPrecioAlquiler());
-            pst.setString(3, a.getNombrePersona().toUpperCase());
-            pst.setString(4, a.getContactoPersona().trim());
+            pst = conexion.prepareStatement("INSERT INTO alquiler VALUES (?,?,?,?,?,?,?)");
+            pst.setInt(1, a.getIdAlquiler());
+            pst.setInt(2, a.getNroorden());
+            pst.setInt(3, a.getVehiculo());
+            pst.setDouble(4, a.getPrecioAlquiler());
+            pst.setInt(5, a.getDia());
+            pst.setString(6, a.getNombrePersona().toUpperCase());
+            pst.setString(7, a.getContactoPersona().trim());
             pst.executeUpdate();
         } catch (SQLException e) {
             throw new SQLException("Error Method - guardarAlquiler -- " + e.getMessage());
@@ -164,7 +208,7 @@ public class Metodos {
         ResultSet rs = null;
         Alquiler a = new Alquiler();
         try {
-            pst = conexion.prepareStatement("SELECT * FROM alquiler a, vehiculo v WHERE v.idvehiculo=a.idvehiculo AND v.matricula = ?");
+            pst = conexion.prepareStatement("SELECT a.* FROM alquiler a, vehiculo v WHERE v.idvehiculo=a.idvehiculo AND v.matricula = ?");
             pst.setString(1, matricula);
             rs = pst.executeQuery();
             while (rs.next()) {
@@ -204,13 +248,75 @@ public class Metodos {
         ResultSet rs = null;
         List lalquiler = new LinkedList();
         try {
-            pst = conexion.prepareStatement("SELECT * FROM alquiler");
+            pst = conexion.prepareStatement("SELECT * FROM alquiler a");
             rs = pst.executeQuery();
             while (rs.next()) {
                 lalquiler.add(Alquiler.load(rs));
             }
         } catch (SQLException e) {
             throw new SQLException("Error Method - listarTodosAlquiler -- " + e.getMessage());
+        } finally {
+            conn.close(conexion, pst, rs);
+        }
+        return lalquiler;
+    }
+    
+    public List listarTodosAlquilerOrden(int NROORDEN) throws SQLException, IOException, IllegalStateException, NoSuchAlgorithmException, Exception {
+        Connection conexion = conn.Conectar(); // cargamos la conexion
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        List lalquiler = new LinkedList();
+        try {
+            pst = conexion.prepareStatement("SELECT * FROM alquiler WHERE nroorden=?");
+            pst.setInt(1, NROORDEN);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                lalquiler.add(Alquiler.load(rs));
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error Method - listarTodosAlquilerOrden -- " + e.getMessage());
+        } finally {
+            conn.close(conexion, pst, rs);
+        }
+        return lalquiler;
+    }
+    
+    public List listarTodosAlquilerMatricula(String MATRICULA) throws SQLException, IOException, IllegalStateException, NoSuchAlgorithmException, Exception {
+        Connection conexion = conn.Conectar(); // cargamos la conexion
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        List lalquiler = new LinkedList();
+        try {
+            pst = conexion.prepareStatement("SELECT a.* FROM alquiler a, vehiculo v WHERE v.idvehiculo=a.idvehiculo AND v.matricula LIKE ?");
+            MATRICULA = MATRICULA + "%";
+            pst.setString(1, MATRICULA);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                lalquiler.add(Alquiler.load(rs));
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error Method - listarTodosAlquilerMatricula -- " + e.getMessage());
+        } finally {
+            conn.close(conexion, pst, rs);
+        }
+        return lalquiler;
+    }
+    
+    public List listarTodosAlquilerContacto(String CONTACTO) throws SQLException, IOException, IllegalStateException, NoSuchAlgorithmException, Exception {
+        Connection conexion = conn.Conectar(); // cargamos la conexion
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        List lalquiler = new LinkedList();
+        try {
+            pst = conexion.prepareStatement("SELECT * FROM alquiler WHERE nombrePersona LIKE ?");
+            CONTACTO = CONTACTO + "%";
+            pst.setString(1, CONTACTO);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                lalquiler.add(Alquiler.load(rs));
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error Method - listarTodosAlquilerMatricula -- " + e.getMessage());
         } finally {
             conn.close(conexion, pst, rs);
         }
@@ -242,9 +348,9 @@ public class Metodos {
         Connection conexion = conn.Conectar(); // cargamos la conexion
         PreparedStatement pst = null;
         try {
-            pst = conexion.prepareStatement("UPDATE alquiler SET idvehiculo=?, precio=?, nombrePersona=?, contactoPersona=? WHERE nroorden=?");
-            pst.setInt(1, a.getVehiculo());
-            pst.setDouble(2, a.getPrecioAlquiler());
+            pst = conexion.prepareStatement("UPDATE alquiler SET precio=?, dia=?, nombrePersona=?, contactoPersona=? WHERE nroorden=?");
+            pst.setDouble(1, a.getPrecioAlquiler());
+            pst.setInt(2, a.getDia());
             pst.setString(3, a.getNombrePersona());
             pst.setString(4, a.getContactoPersona());
             pst.setInt(5, a.getNroorden());

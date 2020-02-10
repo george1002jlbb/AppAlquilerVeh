@@ -33,9 +33,10 @@ public class principal extends javax.swing.JFrame {
     /**
      * Creates new form principal
      */
-    public principal() {
+    public principal() throws IllegalStateException, NoSuchAlgorithmException, Exception {
         initComponents();
         this.setLocationRelativeTo(null);
+        this.consultarAlquiler();
     }
     
     public void consultarAlquiler() throws IOException, IllegalStateException, NoSuchAlgorithmException, Exception {
@@ -58,7 +59,7 @@ public class principal extends javax.swing.JFrame {
             Alquiler a = (Alquiler) l.get(i);
             //fila[i] = l.get(i);
             modelo.setValueAt(a.getNroorden(), i, 0);
-            //modelo.setValueAt(logica.consultarPacienteId(c.getIdpaciente()).getNombre() + " " + logica.consultarPacienteId(c.getIdpaciente()).getApellido(), i, 1);
+            modelo.setValueAt(logica.consultarVehiculo(a.getVehiculo()).getMatricula(), i, 1);
             modelo.setValueAt(a.getPrecioAlquiler(), i, 2);
             modelo.setValueAt(a.getNombrePersona(), i, 3);
             modelo.setValueAt(a.getContactoPersona(), i, 4);
@@ -93,6 +94,7 @@ public class principal extends javax.swing.JFrame {
         jMenuItem5 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("CUCCAR");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("Listado de Vehiculo Alquilado");
@@ -128,7 +130,7 @@ public class principal extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 801, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -343,7 +345,13 @@ public class principal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new principal().setVisible(true);
+                try {
+                    new principal().setVisible(true);
+                } catch (NoSuchAlgorithmException ex) {
+                    Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -351,7 +359,7 @@ public class principal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAct;
     private javax.swing.JButton btnSalir;
-    private javax.swing.JDesktopPane jDesktopPane;
+    public static javax.swing.JDesktopPane jDesktopPane;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
