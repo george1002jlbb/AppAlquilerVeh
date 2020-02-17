@@ -5,7 +5,7 @@
  */
 package appalquilerveh.vehiculo;
 
-import appalquilerveh.dao.Metodos;
+import appalquilerveh.dao.VehiculoDao;
 import appalquilerveh.logica.Vehiculo;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -20,7 +20,8 @@ import javax.swing.JOptionPane;
 public class frmVehiculo extends javax.swing.JInternalFrame {
 
     // variables para gestionar los metodos a la base de datos HUELLAS
-    static Metodos logica = new Metodos();
+    //static Metodos logica = new Metodos();
+    static VehiculoDao vdao = new VehiculoDao();
     
     /**
      * Creates new form Vehiculo
@@ -144,18 +145,16 @@ public class frmVehiculo extends javax.swing.JInternalFrame {
         v.setDescripcion(txtdesc.getText().toUpperCase());
         
         try {
-            if (!logica.existeVehiculo(v.getMatricula())) {
-                logica.guardarVehiculo(v);
+            //if (!vdao.existeVehiculo(v.getMatricula())) {
+            if (!vdao.existe(v.getMatricula())) {
+                //logica.guardarVehiculo(v);
+                vdao.guardar(v);
                 JOptionPane.showMessageDialog(this, "Vehiculo agregado correctamente", "Crear", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Vehiculo existe", "Crear", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalStateException ex) {
-            Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);
@@ -177,14 +176,11 @@ public class frmVehiculo extends javax.swing.JInternalFrame {
             v.setTipo(cboti.getSelectedItem().toString() );
             v.setDescripcion(txtdesc.getText().toUpperCase() );
             
-            logica.modificarVehiculo(v);
+            //logica.modificarVehiculo(v);
+            vdao.modificar(v);
             JOptionPane.showMessageDialog(this, "Vehiculo modificado correctamente", "Modificar", JOptionPane.INFORMATION_MESSAGE);
 
-        } catch (IOException ex) {
-            Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalStateException ex) {
-            Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);

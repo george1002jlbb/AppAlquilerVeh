@@ -7,8 +7,8 @@ package appalquilerveh;
 
 import appalquilerveh.alquiler.frmAlquiler;
 import appalquilerveh.alquiler.frmConsultarAl;
+import appalquilerveh.dao.AlquilerDao;
 import appalquilerveh.dao.Conn;
-import appalquilerveh.dao.Metodos;
 import appalquilerveh.logica.Alquiler;
 import appalquilerveh.vehiculo.frmConsultarVe;
 import appalquilerveh.vehiculo.frmVehiculo;
@@ -27,8 +27,8 @@ import javax.swing.table.DefaultTableModel;
 public class principal extends javax.swing.JFrame {
 
     // variables para gestionar los metodos a la base de datos HUELLAS
-    static Metodos logica = new Metodos();
-    private Conn conn = new Conn();
+    //static Metodos logica = new Metodos();
+    static AlquilerDao adao = new AlquilerDao();
     
     /**
      * Creates new form principal
@@ -42,7 +42,8 @@ public class principal extends javax.swing.JFrame {
     public void consultarAlquiler() throws IOException, IllegalStateException, NoSuchAlgorithmException, Exception {
         List l = new LinkedList();
         l.clear(); // limpiamos el listado
-        l = logica.listarTodosAlquiler();
+        //l = logica.listarTodosAlquiler();
+        l = adao.listar();
 
         DefaultTableModel modelo = new DefaultTableModel();
         jtblListadoConsultas.setModel(modelo);
@@ -59,7 +60,7 @@ public class principal extends javax.swing.JFrame {
             Alquiler a = (Alquiler) l.get(i);
             //fila[i] = l.get(i);
             modelo.setValueAt(a.getNroorden(), i, 0);
-            modelo.setValueAt(logica.consultarVehiculo(a.getVehiculo()).getMatricula(), i, 1);
+            modelo.setValueAt(adao.consultarVehiculo(a.getVehiculo()).getMatricula(), i, 1);
             modelo.setValueAt(a.getPrecioAlquiler(), i, 2);
             modelo.setValueAt(a.getNombrePersona(), i, 3);
             modelo.setValueAt(a.getContactoPersona(), i, 4);

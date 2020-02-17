@@ -5,7 +5,7 @@
  */
 package appalquilerveh.vehiculo;
 
-import appalquilerveh.dao.Metodos;
+import appalquilerveh.dao.VehiculoDao;
 import appalquilerveh.logica.Vehiculo;
 import static appalquilerveh.principal.jDesktopPane;
 import java.io.IOException;
@@ -26,7 +26,8 @@ import javax.swing.table.TableColumnModel;
 public class frmConsultarVe extends javax.swing.JInternalFrame {
 
     // variables para gestionar los metodos a la base de datos HUELLAS
-    static Metodos logica = new Metodos();
+    //static Metodos logica = new Metodos();
+    static VehiculoDao vdao = new VehiculoDao();
 
     /**
      * Creates new form Consultar
@@ -204,7 +205,8 @@ public class frmConsultarVe extends javax.swing.JInternalFrame {
         try {
             int seleccionfila = jtblBusqVeh.rowAtPoint(evt.getPoint()); // obtenemos la posicion
             String identificacion = String.valueOf(jtblBusqVeh.getValueAt(seleccionfila, 0));
-            Vehiculo v = logica.consultarVehiculoMatricula(identificacion);
+            //Vehiculo v = vdao.consultarVehiculoMatricula(identificacion);
+            Vehiculo v = (Vehiculo)vdao.consultar(identificacion);
 
             frmVehiculo frmVehiculo = new frmVehiculo();
             frmVehiculo.txtmat.setText(v.getMatricula());
@@ -223,12 +225,6 @@ public class frmConsultarVe extends javax.swing.JInternalFrame {
             jDesktopPane.add(frmVehiculo);
             frmVehiculo.show();
 
-        } catch (SQLException ex) {
-            Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(frmVehiculo.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -245,7 +241,7 @@ public class frmConsultarVe extends javax.swing.JInternalFrame {
                 try {
                     
                     l.clear(); // limpiamos el listado
-                    l = logica.listarTodosVehiculosMatricula( txtBusqueda.getText().toUpperCase() );
+                    l = vdao.listarTodosVehiculosMatricula( txtBusqueda.getText().toUpperCase() );
                     //System.out.println("lista " + l.size());
                     DefaultTableModel modelo = new DefaultTableModel();
                     jtblBusqVeh.setModel(modelo);
@@ -277,7 +273,7 @@ public class frmConsultarVe extends javax.swing.JInternalFrame {
             case "Tipo":
                 try {
                     l.clear(); // limpiamos el listado
-                    l = logica.listarTodosVehiculosTipo(ucFirst(txtBusqueda.getText()) );
+                    l = vdao.listarTodosVehiculosTipo(ucFirst(txtBusqueda.getText()) );
                     //System.out.println("lista " + l.size());
                     DefaultTableModel modelo = new DefaultTableModel();
                     jtblBusqVeh.setModel(modelo);
@@ -309,7 +305,7 @@ public class frmConsultarVe extends javax.swing.JInternalFrame {
             case "Todos":
                 try {
                     l.clear(); // limpiamos el listado
-                    l = logica.listarTodosVehiculos();
+                    l = vdao.listar();
                     //System.out.println("lista " + l.size());
                     DefaultTableModel modelo = new DefaultTableModel();
                     jtblBusqVeh.setModel(modelo);
@@ -328,12 +324,6 @@ public class frmConsultarVe extends javax.swing.JInternalFrame {
                         modelo.setValueAt(v.getDescripcion(), i, 2);
 
                     }
-                } catch (SQLException ex) {
-                    Logger.getLogger(frmConsultarVe.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(frmConsultarVe.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (NoSuchAlgorithmException ex) {
-                    Logger.getLogger(frmConsultarVe.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (Exception ex) {
                     Logger.getLogger(frmConsultarVe.class.getName()).log(Level.SEVERE, null, ex);
                 }

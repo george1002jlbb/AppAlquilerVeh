@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author Jorge Bermudez
  */
-public class Metodos {
+public class Metodos_old {
 
     private Conn conn = new Conn();
 
@@ -87,7 +87,6 @@ public class Metodos {
         Connection conexion = conn.Conectar(); // cargamos la conexion
         PreparedStatement pst = null;
         ResultSet rs = null;
-        Vehiculo v = new Vehiculo();
         try {
             pst = conexion.prepareStatement("SELECT COUNT(*) FROM vehiculo WHERE matricula = ?");
             pst.setString(1, veh);

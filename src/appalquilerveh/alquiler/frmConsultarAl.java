@@ -5,7 +5,7 @@
  */
 package appalquilerveh.alquiler;
 
-import appalquilerveh.dao.Metodos;
+import appalquilerveh.dao.AlquilerDao;
 import appalquilerveh.logica.Alquiler;
 import java.io.IOException;
 import static appalquilerveh.principal.jDesktopPane;
@@ -25,7 +25,9 @@ import javax.swing.table.TableColumnModel;
 public class frmConsultarAl extends javax.swing.JInternalFrame {
 
     // variables para gestionar los metodos a la base de datos HUELLAS
-    static Metodos logica = new Metodos();
+    //static Metodos logica = new Metodos();
+    static AlquilerDao adao = new AlquilerDao();
+    
     
     /**
      * Creates new form Consultar
@@ -199,7 +201,7 @@ public class frmConsultarAl extends javax.swing.JInternalFrame {
             case "Orden":
             try {
                 l.clear(); // limpiamos el listado
-                l = logica.listarTodosAlquilerOrden( Integer.parseInt(txtBusqueda.getText()) );
+                l = adao.listarTodosAlquilerOrden( Integer.parseInt(txtBusqueda.getText()) );
                 //System.out.println("lista " + l.size());
                 DefaultTableModel modelo = new DefaultTableModel();
                 jtblBusqVeh.setModel(modelo);
@@ -215,7 +217,7 @@ public class frmConsultarAl extends javax.swing.JInternalFrame {
                     Alquiler a = (Alquiler) l.get(i);
                     //fila[i] = l.get(i);
                     modelo.setValueAt(a.getNroorden(), i, 0);
-                    modelo.setValueAt( logica.consultarVehiculo(a.getVehiculo()).getMatricula(), i, 1);
+                    modelo.setValueAt( adao.consultarVehiculo(a.getVehiculo()).getMatricula(), i, 1);
                     modelo.setValueAt(a.getPrecioAlquiler(), i, 2);
                    modelo.setValueAt(a.getNombrePersona().toUpperCase(), i, 3);
 
@@ -227,7 +229,7 @@ public class frmConsultarAl extends javax.swing.JInternalFrame {
             case "Matricula":
             try {
                 l.clear(); // limpiamos el listado
-                l = logica.listarTodosAlquilerMatricula(txtBusqueda.getText().toUpperCase() );
+                l = adao.listarTodosAlquilerMatricula(txtBusqueda.getText().toUpperCase() );
                 //System.out.println("lista " + l.size());
                 DefaultTableModel modelo = new DefaultTableModel();
                 jtblBusqVeh.setModel(modelo);
@@ -243,7 +245,7 @@ public class frmConsultarAl extends javax.swing.JInternalFrame {
                     Alquiler a = (Alquiler) l.get(i);
                     //fila[i] = l.get(i);
                     modelo.setValueAt(a.getNroorden(), i, 0);
-                    modelo.setValueAt( logica.consultarVehiculo(a.getVehiculo()).getMatricula(), i, 1);
+                    modelo.setValueAt( adao.consultarVehiculo(a.getVehiculo()).getMatricula(), i, 1);
                     modelo.setValueAt(a.getPrecioAlquiler(), i, 2);
                     modelo.setValueAt(a.getNombrePersona().toUpperCase(), i, 3);
 
@@ -261,7 +263,7 @@ public class frmConsultarAl extends javax.swing.JInternalFrame {
             case "Contacto":
             try {
                 l.clear(); // limpiamos el listado
-                l = logica.listarTodosAlquilerContacto(txtBusqueda.getText().toUpperCase() );
+                l = adao.listarTodosAlquilerContacto(txtBusqueda.getText().toUpperCase() );
                 //System.out.println("lista " + l.size());
                 DefaultTableModel modelo = new DefaultTableModel();
                 jtblBusqVeh.setModel(modelo);
@@ -277,7 +279,7 @@ public class frmConsultarAl extends javax.swing.JInternalFrame {
                     Alquiler a = (Alquiler) l.get(i);
                     //fila[i] = l.get(i);
                     modelo.setValueAt(a.getNroorden(), i, 0);
-                    modelo.setValueAt( logica.consultarVehiculo(a.getVehiculo()).getMatricula(), i, 1);
+                    modelo.setValueAt( adao.consultarVehiculo(a.getVehiculo()).getMatricula(), i, 1);
                     modelo.setValueAt(a.getPrecioAlquiler(), i, 2);
                     modelo.setValueAt(a.getNombrePersona().toUpperCase(), i, 3);
 
@@ -295,7 +297,8 @@ public class frmConsultarAl extends javax.swing.JInternalFrame {
             case "Todos":
             try {
                 l.clear(); // limpiamos el listado
-                l = logica.listarTodosAlquiler();
+                //l = logica.listarTodosAlquiler();
+                l = adao.listar();
                //System.out.println("lista " + l.size());
                 DefaultTableModel modelo = new DefaultTableModel();
                 jtblBusqVeh.setModel(modelo);
@@ -311,7 +314,7 @@ public class frmConsultarAl extends javax.swing.JInternalFrame {
                     Alquiler a = (Alquiler) l.get(i);
                     //fila[i] = l.get(i);
                     modelo.setValueAt(a.getNroorden(), i, 0);
-                    modelo.setValueAt( logica.consultarVehiculo(a.getVehiculo()).getMatricula(), i, 1);
+                    modelo.setValueAt( adao.consultarVehiculo(a.getVehiculo()).getMatricula(), i, 1);
                     modelo.setValueAt(a.getPrecioAlquiler(), i, 2);
                     modelo.setValueAt(a.getNombrePersona().toUpperCase(), i, 3);
 
@@ -348,7 +351,7 @@ public class frmConsultarAl extends javax.swing.JInternalFrame {
         try {
             int seleccionfila = jtblBusqVeh.rowAtPoint(evt.getPoint()); // obtenemos la posicion
             String identificacion = String.valueOf(jtblBusqVeh.getValueAt(seleccionfila, 0));
-            Alquiler a = logica.consultarAlquilerOrden( Integer.parseInt(identificacion) );
+            Alquiler a = adao.consultarAlquilerOrden( Integer.parseInt(identificacion) );
 
             frmAlquiler frmAlquiler = new frmAlquiler();
             frmAlquiler.txtnro.setText(String.valueOf(a.getNroorden()) );

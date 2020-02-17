@@ -5,7 +5,8 @@
  */
 package appalquilerveh.alquiler;
 
-import appalquilerveh.dao.Metodos;
+import appalquilerveh.dao.AlquilerDao;
+import appalquilerveh.dao.VehiculoDao;
 import appalquilerveh.logica.Alquiler;
 import appalquilerveh.logica.Combo;
 import appalquilerveh.logica.Vehiculo;
@@ -25,7 +26,9 @@ import javax.swing.JOptionPane;
 public class frmAlquiler extends javax.swing.JInternalFrame {
 
     // variables para gestionar los metodos a la base de datos HUELLAS
-    static Metodos logica = new Metodos();
+    //static Metodos logica = new Metodos();
+    static AlquilerDao adao = new AlquilerDao();
+    static VehiculoDao vdao= new VehiculoDao();
 
     /**
      * Creates new form Alquiler
@@ -37,16 +40,10 @@ public class frmAlquiler extends javax.swing.JInternalFrame {
 
     public void llenarcboVehiculo() throws NoSuchAlgorithmException, Exception {
         cbove.removeAllItems();
-        try {
-            List<Vehiculo> l = new LinkedList<Vehiculo>();
-            l = logica.listarTodosVehiculos();
-            for (int i = 0; i < l.size(); i++) {
-                cbove.addItem(new Combo(l.get(i).getIdvehiculo(), l.get(i).getMatricula() + " " + l.get(i).getTipo()));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(frmAlquiler.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(frmAlquiler.class.getName()).log(Level.SEVERE, null, ex);
+        List<Vehiculo> l = new LinkedList<Vehiculo>();
+        l = vdao.listar();
+        for (int i = 0; i < l.size(); i++) {
+            cbove.addItem(new Combo(l.get(i).getIdvehiculo(), l.get(i).getMatricula() + " " + l.get(i).getTipo()));
         }
     }
 
@@ -179,7 +176,7 @@ public class frmAlquiler extends javax.swing.JInternalFrame {
         a.setDia(Integer.parseInt(txtdi.getText()));
 
         try {
-            Vehiculo v = logica.consultarVehiculo(cbove.getItemAt(cbove.getSelectedIndex()).getIdCombo());
+            Vehiculo v = adao.consultarVehiculo(cbove.getItemAt(cbove.getSelectedIndex()).getIdCombo());
             a.setVehiculo(v.getIdvehiculo());
             switch (v.getTipo()) {
                 case "Coche":
@@ -203,8 +200,10 @@ public class frmAlquiler extends javax.swing.JInternalFrame {
 
             }
 
-            if (!logica.existeAlquiler(a.getNroorden())) {
-                logica.guardarAlquiler(a);
+            //if (!adao.existeAlquiler(a.getNroorden())) {
+            if (!adao.existe(String.valueOf(a.getNroorden())) ) {
+                //logica.guardarAlquiler(a);
+                adao.guardar(a);
                 JOptionPane.showMessageDialog(this, "Alquiler agregado correctamente", "Crear", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
             } else {
@@ -241,7 +240,7 @@ public class frmAlquiler extends javax.swing.JInternalFrame {
                 a.setDia(Integer.parseInt(txtdi.getText()));
                 // proceso de recalculo de precio si el dia cambia
                 try {
-                    Vehiculo v = logica.consultarVehiculo(cbove.getItemAt(cbove.getSelectedIndex()).getIdCombo());
+                    Vehiculo v = adao.consultarVehiculo(cbove.getItemAt(cbove.getSelectedIndex()).getIdCombo());
                     a.setVehiculo(v.getIdvehiculo());
                     switch (v.getTipo()) {
                         case "Coche":
@@ -265,7 +264,8 @@ public class frmAlquiler extends javax.swing.JInternalFrame {
 
                     }
 
-                    logica.modificarAlquiler(a);
+                    //logica.modificarAlquiler(a);
+                    adao.modificar(a);
                     JOptionPane.showMessageDialog(this, "Alquier modificado correctamente", "Modificar", JOptionPane.INFORMATION_MESSAGE);
 
                 } catch (IOException ex) {
@@ -279,7 +279,8 @@ public class frmAlquiler extends javax.swing.JInternalFrame {
                 }
             } else {
                 a.setDia(Integer.parseInt(txtdi.getText()));
-                logica.modificarAlquiler(a);
+                //logica.modificarAlquiler(a);
+                adao.modificar(a);
                 JOptionPane.showMessageDialog(this, "Alquier modificado correctamente", "Modificar", JOptionPane.INFORMATION_MESSAGE);
             }
 
